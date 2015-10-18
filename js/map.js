@@ -1,3 +1,21 @@
+/*
+Get coordinates from Rectangle
+and binds these values to table cells
+*/
+function getCoordinatesValues(rectangle){
+  var bounds = rectangle.getBounds();
+    
+    var sw = bounds.getSouthWest();
+    var ne = bounds.getNorthEast();
+
+    document.getElementById("sw_direction").innerText = (sw.lat()).toFixed(4) + ", " + (sw.lng()).toFixed(4);
+    document.getElementById("ne_direction").innerText = (ne.lat()).toFixed(4) + ", " + (ne.lng()).toFixed(4);
+    document.getElementById("min_lat_direction").innerText = (sw.lat()).toFixed(4);
+    document.getElementById("max_lat_direction").innerText = (ne.lat()).toFixed(4);
+    document.getElementById("min_long_direction").innerText = (sw.lng()).toFixed(4);
+    document.getElementById("max_long_direction").innerText = (ne.lng()).toFixed(4);
+}
+
 function initMap() {
   
   // Map Initialization
@@ -32,8 +50,18 @@ function initMap() {
   drawingManager.setMap(map);
 
   google.maps.event.addListener(drawingManager, 'rectanglecomplete', function(rectangle) {
-    console.log("rectangle");
+
+    getCoordinatesValues(rectangle);
+
+    google.maps.event.addListener(rectangle, 'bounds_changed', function(event) {
+
+      getCoordinatesValues(rectangle);
+      
+      });
   });
+
+  var info = document.getElementById('info');
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(info);
 
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
