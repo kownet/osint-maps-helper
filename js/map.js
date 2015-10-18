@@ -16,8 +16,40 @@ function getCoordinatesValues(rectangle){
     document.getElementById("max_long_direction").innerText = (ne.lng()).toFixed(4);
 }
 
+var selectedShape;
+var drawingManager;
+
+function deleteSelectedShape() {
+  if (selectedShape) {
+    selectedShape.setMap(null);
+  }
+  drawingManager.setOptions({
+    drawingControl: true
+  });
+
+    document.getElementById("sw_direction").innerText = 0;
+    document.getElementById("ne_direction").innerText = 0;
+    document.getElementById("min_lat_direction").innerText = 0;
+    document.getElementById("max_lat_direction").innerText = 0;
+    document.getElementById("min_long_direction").innerText = 0;
+    document.getElementById("max_long_direction").innerText = 0;
+}
+
+function clearSelectedShape(){
+  if (selectedShape) {
+    selectedShape.setEditable(false);
+    selectedShape = null;
+  }
+}
+
+function setSelectedShape(shape) {
+  clearSelectedShape();
+  selectedShape = shape;
+  shape.setEditable(true);
+}
+
+
 function initMap() {
-  
   // Map Initialization
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {
@@ -29,7 +61,7 @@ function initMap() {
   });
 
   // Drawing canvas
-  var drawingManager = new google.maps.drawing.DrawingManager({
+  drawingManager = new google.maps.drawing.DrawingManager({
     drawingMode: google.maps.drawing.OverlayType.RECTANGLE,
     drawingControl: true,
     drawingControlOptions: {
@@ -51,6 +83,11 @@ function initMap() {
 
   google.maps.event.addListener(drawingManager, 'rectanglecomplete', function(rectangle) {
 
+    drawingManager.setDrawingMode(null);
+    drawingManager.setOptions({
+      drawingControl: false
+    });
+
     getCoordinatesValues(rectangle);
 
     google.maps.event.addListener(rectangle, 'bounds_changed', function(event) {
@@ -58,7 +95,12 @@ function initMap() {
       getCoordinatesValues(rectangle);
       
       });
+
+    setSelectedShape(rectangle);
   });
+
+  var del = document.getElementById('delete-button');
+  google.maps.event.addDomListener(del, 'click', deleteSelectedShape);
 
   var info = document.getElementById('info');
   map.controls[google.maps.ControlPosition.TOP_RIGHT].push(info);

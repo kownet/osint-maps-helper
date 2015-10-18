@@ -13,6 +13,10 @@ html, body {
   width: 345px;
 }
 
+#info {
+  width: 380px;
+}
+
 .controls {
   margin-top: 10px;
   border: 1px solid transparent;
@@ -32,7 +36,7 @@ html, body {
   margin-left: 12px;
   padding: 0 11px 0 13px;
   text-overflow: ellipsis;
-  width: 300px;
+  width: 400px;
 }
 
 #pac-input:focus {
@@ -49,4 +53,8 @@ html, body {
   font-family: Roboto;
   font-size: 13px;
   font-weight: 300;
+}
+
+.bigger {
+  font-size: 1.5em;
 }
